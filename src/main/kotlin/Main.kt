@@ -13,15 +13,14 @@ import androidx.compose.ui.res.useResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import com.sun.tools.javac.Main
+
 
 @Composable
 fun SecondaryWindow(onClose: () -> Unit) {
     val secondaryWindowState = rememberWindowState()
-    var showMainWindow by remember { mutableStateOf(true) }
-    var showSecondWindow by remember { mutableStateOf(false) }
+
     Window(
-        onCloseRequest = {  showSecondWindow = false } ,
+        onCloseRequest = { onClose() } ,
         title = "Ventana Secundaria",
         state = secondaryWindowState
     ) {
@@ -33,9 +32,7 @@ fun SecondaryWindow(onClose: () -> Unit) {
         Text("Este es el contenido de la ventana secundaria", color = Color.Red)
 
         Button(
-            onClick = {
-                showMainWindow = true
-                showSecondWindow = false }
+            onClick = onClose
         ){ Text("Volver a la ventana principal") }
         }
     }
@@ -48,6 +45,7 @@ fun main() = application{
     val mainWindowState = rememberWindowState()
     var showMainWindow by remember { mutableStateOf(true) }
     var showSecondWindow by remember { mutableStateOf(false) }
+
 
     if (showMainWindow) {
         Window(
@@ -75,7 +73,8 @@ fun main() = application{
     }
 
     if (showSecondWindow) {
-        SecondaryWindow(onClose = { showSecondWindow = false })
+        SecondaryWindow(onClose = { showSecondWindow = false
+                                    showMainWindow = true})
     }
 
     if (!showMainWindow && !showSecondWindow) {
